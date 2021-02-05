@@ -47,11 +47,39 @@ impl <K: Ord, V> BST<K, V> {
     }
 
     pub fn insert(&mut self, key: K, value: V) {
-        unimplemented!()
+        match self.node {
+            None => {
+                self.node = Some(Box::new(Node {
+                    key: key,
+                    value: value,
+                    left: BST::empty(),
+                    right: BST::empty() }));
+            },
+            Some(ref mut a) => {
+                if a.key.eq(&key) {
+                    a.value = value;
+                } else if a.key.gt(&key) {
+                    a.left.insert(key, value)
+                } else {
+                    a.right.insert(key, value)
+                }
+            }
+        }
     }
 
     pub fn lookup(&self, key: K) -> Option<&V> {
-        unimplemented!()
+        return match self.node {
+            None => None,
+            Some(ref a) => {
+                if a.key.eq(&key) {
+                    Some(&a.value)
+                } else if a.key.gt(&key) {
+                    a.left.lookup(key)
+                } else {
+                    a.right.lookup(key)
+                }
+            }
+        }
     }
 }
 
@@ -117,6 +145,7 @@ mod tests {
     #[test]
     fn lookup() {
         let tree = make_tree1();
+        dbg!(&tree);
         assert!(tree.contains("test"));
         assert_eq!(tree.lookup("test"), Some(&23));
         assert_eq!(tree.lookup("abc"), Some(&13));
