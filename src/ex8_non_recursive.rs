@@ -44,7 +44,17 @@ impl <K: Ord, V> BST<K, V> {
     }
 
     pub fn lookup(&self, key: K) -> Option<&V> {
-        unimplemented!()
+        let mut curr = self;
+        while let Some(node) = &curr.node {
+            if node.key == key {
+                return Some(&node.value)
+            } else if node.key > key {
+                curr = &node.left;
+            } else {
+                curr = &node.right;
+            }
+        }
+        None
     }
 }
 
