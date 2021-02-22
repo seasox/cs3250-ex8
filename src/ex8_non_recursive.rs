@@ -40,7 +40,22 @@ impl <K: Ord, V> BST<K, V> {
     }
 
     pub fn insert(&mut self, key: K, value: V) {
-        unimplemented!()
+        let mut curr = self;
+        while let Some(ref mut a) = curr.node {
+            if a.key.eq(&key) {
+                a.value = value;
+                return;
+            } else if a.key.gt(&key) {
+                curr = &mut a.left;
+            } else {
+                curr = &mut a.right;
+            }
+        }
+        curr.node = Some(Box::new(Node {
+            key,
+            value,
+            left: BST::empty(),
+            right: BST::empty() }));
     }
 
     pub fn lookup(&self, key: K) -> Option<&V> {
